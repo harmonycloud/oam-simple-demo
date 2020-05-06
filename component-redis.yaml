@@ -1,0 +1,29 @@
+apiVersion: core.oam.dev/v1alpha1
+kind: ComponentSchematic
+metadata:
+  annotations:
+    version: "18"
+  creationTimestamp: "2020-05-06T12:21:21Z"
+  generation: 1
+  name: demo-redis
+  namespace: oam-oamdemo
+  resourceVersion: "188952"
+  selfLink: /apis/core.oam.dev/v1alpha1/namespaces/oam-oamdemo/componentschematics/demo-redis
+  uid: 187d939e-8f94-11ea-8257-00163e146fef
+spec:
+  containers:
+  - args: []
+    command: []
+    image: onlineshop/redis:3.2-alpine
+    imagePullPolicy: IfNotPresent
+    name: redis
+    ports:
+    - containerPort: 6379
+      name: tcp-6379
+      protocol: TCP
+    resources:
+      cpu:
+        required: 500m
+      memory:
+        required: 512Mi
+  workloadType: core.oam.dev/v1alpha1.Server

@@ -1,0 +1,146 @@
+apiVersion: core.oam.dev/v1alpha1
+kind: ApplicationConfiguration
+metadata:
+  creationTimestamp: "2020-05-06T12:21:22Z"
+  generation: 1
+  name: demo
+  namespace: oam-oamdemo
+  resourceVersion: "189215"
+  selfLink: /apis/core.oam.dev/v1alpha1/namespaces/oam-oamdemo/applicationconfigurations/demo
+  uid: 18c2c59e-8f94-11ea-8257-00163e146fef
+spec:
+  components:
+  - componentName: demo-tomcat
+    instanceName: demo-tomcat
+    parameterValues: []
+    traits:
+    - name: better-auto-scaler
+      properties:
+        cpu-up: 50
+        maximum: 3
+        memory-up: 50
+        minimum: 2
+    - name: log-pilot
+      properties:
+        container: tomcat
+        name: logindex
+        path: /usr/local/tomcat/logs
+        pilotLogPrefix: aliyun
+        tags: owner:appconfig/demo
+    - name: nginx-ingress
+      properties:
+        hostname: tomcat.example
+        path: /
+        servicePort: 8080
+  - componentName: demo-mysql
+    instanceName: demo-mysql
+    parameterValues:
+    - name: password
+      value: passwordtest
+    traits:
+    - name: manual-scaler
+      properties:
+        replicaCount: 1
+    - name: resources-policy
+      properties:
+        container: mysql
+        limits:
+          cpu: 1000m
+          memory: 1024Mi
+    - name: volume-mounter
+      properties:
+        storageClass: default
+        volumeName: mysql-data
+  - componentName: demo-redis
+    instanceName: demo-redis
+    parameterValues: []
+    traits:
+    - name: host-policy
+      properties:
+        hostIpc: "false"
+        hostNetwork: "true"
+        hostPid: "false"
+    - name: manual-scaler
+      properties:
+        replicaCount: 1
+    - name: schedule-policy
+      properties:
+        nodeAffinity:
+          type: preferred
+        podAffinity:
+          selector:
+            app: tomcat
+          type: preferred
+        podAntiAffinity:
+          type: preferred
+status:
+  modules:
+  - groupVersion: core.oam.dev/v1alpha1
+    kind: Server
+    name: demo-tomcat
+    status: Healthy
+  - groupVersion: core.oam.dev/v1alpha1
+    kind: Server
+    name: demo-mysql
+    status: Healthy
+  - groupVersion: core.oam.dev/v1alpha1
+    kind: Server
+    name: demo-redis
+    status: Healthy
+  phase: Synced
+  resources:
+  - apiVersion: apps/v1
+    component: demo-tomcat
+    kind: Deployment
+    name: demo-tomcat
+    role: workload
+    status: 'Ready: 2/2, Up-to-date: 2, Available: 2.'
+  - apiVersion: v1
+    component: demo-tomcat
+    kind: Service
+    name: demo-tomcat
+    role: workload
+    status: 'Type: ClusterIP, Cluster-IP: 1.254.119.183, Port(s): 8080/TCP.'
+  - apiVersion: extensions/v1beta1
+    component: demo-tomcat
+    kind: Ingress
+    name: demo-tomcat
+    role: trait
+    status: 'Hosts: tomcat.example '
+  - apiVersion: harmonycloud.cn/v1beta1
+    component: demo-tomcat
+    kind: HorizontalPodAutoscaler
+    name: demo-tomcat
+    role: trait
+    status: 'CurrentReplicas: 2, DesiredReplicas: 2.'
+  - apiVersion: v1
+    component: demo-mysql
+    kind: PersistentVolumeClaim
+    name: mysql-data
+    role: trait
+    status: 'Volume: pvc-18e5f923-8f94-11ea-8257-00163e146fef, Capacity: 10Gi, AccessModes:
+      [ReadWriteOnce], StorageClass: default, Status: Bound.'
+  - apiVersion: v1
+    component: demo-mysql
+    kind: Service
+    name: demo-mysql
+    role: workload
+    status: 'Type: ClusterIP, Cluster-IP: 1.254.72.82, Port(s): 3306/TCP.'
+  - apiVersion: v1
+    component: demo-redis
+    kind: Service
+    name: demo-redis
+    role: workload
+    status: 'Type: ClusterIP, Cluster-IP: 1.254.86.25, Port(s): 6379/TCP.'
+  - apiVersion: apps/v1
+    component: demo-mysql
+    kind: Deployment
+    name: demo-mysql
+    role: workload
+    status: 'Ready: 1/1, Up-to-date: 1, Available: 1.'
+  - apiVersion: apps/v1
+    component: demo-redis
+    kind: Deployment
+    name: demo-redis
+    role: workload
+    status: 'Ready: 1/1, Up-to-date: 1, Available: 1.'

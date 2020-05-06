@@ -1,0 +1,45 @@
+apiVersion: core.oam.dev/v1alpha1
+kind: ComponentSchematic
+metadata:
+  annotations:
+    version: "18"
+  creationTimestamp: "2020-05-06T12:21:21Z"
+  generation: 1
+  name: demo-mysql
+  namespace: oam-oamdemo
+  resourceVersion: "188951"
+  selfLink: /apis/core.oam.dev/v1alpha1/namespaces/oam-oamdemo/componentschematics/demo-mysql
+  uid: 187010de-8f94-11ea-8257-00163e146fef
+spec:
+  containers:
+  - args: []
+    command: []
+    env:
+    - fromParam: password
+      name: MYSQL_ROOT_PASSWORD
+    image: onlineshop/mysql:8.0.19
+    imagePullPolicy: IfNotPresent
+    name: mysql
+    ports:
+    - containerPort: 3306
+      name: tcp-3306
+      protocol: TCP
+    resources:
+      cpu:
+        required: 500m
+      memory:
+        required: 512Mi
+      volumes:
+      - accessMode: RWX
+        disk:
+          ephemeral: true
+          required: 10Gi
+        mountPath: /var/lib/mysql
+        name: mysql-data
+  parameters:
+  - default: "123456"
+    description: password for mysql root
+    name: password
+    required: false
+    type: string
+  workloadType: core.oam.dev/v1alpha1.Server

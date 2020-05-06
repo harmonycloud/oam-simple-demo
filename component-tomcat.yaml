@@ -1,0 +1,29 @@
+apiVersion: core.oam.dev/v1alpha1
+kind: ComponentSchematic
+metadata:
+  annotations:
+    version: "18"
+  creationTimestamp: "2020-05-06T12:21:21Z"
+  generation: 1
+  name: demo-tomcat
+  namespace: oam-oamdemo
+  resourceVersion: "188950"
+  selfLink: /apis/core.oam.dev/v1alpha1/namespaces/oam-oamdemo/componentschematics/demo-tomcat
+  uid: 186be010-8f94-11ea-8257-00163e146fef
+spec:
+  containers:
+  - args: []
+    command: []
+    image: onlineshop/tomcat:v8.0
+    imagePullPolicy: IfNotPresent
+    name: tomcat
+    ports:
+    - containerPort: 8080
+      name: tcp-8080
+      protocol: TCP
+    resources:
+      cpu:
+        required: 500m
+      memory:
+        required: 512Mi
+  workloadType: core.oam.dev/v1alpha1.Server
